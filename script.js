@@ -1,16 +1,13 @@
 async function getsongs() {
-  let res = await fetch("song.json"); // songs.json is in your repo
-  let songList = await res.json();
-
-  let songs = songList.filter(item => item.file.toLowerCase().endsWith(".mp3"));
-  let images = songList.filter(
-    item =>
-      item.file.toLowerCase().endsWith(".jpg") || item.file.toLowerCase().endsWith(".png")
-  );
-
-  return { songs, images };
+  let res = await fetch("songs.json");
+  let data = await res.json();
+  return data;
 }
 
+getsongs().then(data => {
+  console.log("Songs:", data.songs);
+  console.log("Images:", data.images);
+});
 async function main() {
   const { songs, images } = await getsongs();
   const cardContainer = document.querySelector(".cardcontainer");
