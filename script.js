@@ -1,24 +1,11 @@
-async function getFilesFromDir(url) {
-  let res = await fetch(url);
-  let text = await res.text();
-  let div = document.createElement("div");
-  div.innerHTML = text;
-  let as = div.getElementsByTagName("a");
-  return Array.from(as).map((a) => a.href);
-}
-
-function sanitizeFileName(name) {
-  return name.toLowerCase().replace(/[^a-z0-9]/g, "");
-}
-
 async function getsongs() {
-  let songLinks = await getFilesFromDir("http://127.0.0.1:5500/songs/");
-  let imageLinks = await getFilesFromDir("http://127.0.0.1:5500/images/");
+  let res = await fetch("song.json"); // songs.json is in your repo
+  let songList = await res.json();
 
-  let songs = songLinks.filter((href) => href.toLowerCase().endsWith(".mp3"));
-  let images = imageLinks.filter(
-    (href) =>
-      href.toLowerCase().endsWith(".jpg") || href.toLowerCase().endsWith(".png")
+  let songs = songList.filter(item => item.file.toLowerCase().endsWith(".mp3"));
+  let images = songList.filter(
+    item =>
+      item.file.toLowerCase().endsWith(".jpg") || item.file.toLowerCase().endsWith(".png")
   );
 
   return { songs, images };
@@ -36,86 +23,24 @@ async function main() {
   let currentCard = null;
   let currentLi = null;
   let currentSongIndex = -1;
-  let playMode = "all"; // "all" or "favorites"
-
-  const playbarImg = document.getElementById("playbar-img");
-  const playbarTitle = document.getElementById("playbar-title");
-  const playPauseBtn = document.getElementById("play-pause-btn");
-  const prevBtn = document.getElementById("prev-btn");
-  const nextBtn = document.getElementById("next-btn");
-  const seekbar = document.getElementById("seekbar");
-  const currentTimeEl = document.getElementById("current-time");
-  const totalDurationEl = document.getElementById("total-duration");
-  const volumeSlider = document.getElementById("volume-slider");
-
+  let playMode = "all";
   let songData = [];
   let favorites = new Set();
 
-  function updateFavoritesUI() {
-    favList.innerHTML = "";
-
-    if (favorites.size === 0) {
-      const msg = document.createElement("li");
-      msg.style.textAlign = "center";
-      msg.style.color = "#888";
-      msg.style.padding = "10px";
-      msg.textContent = "Make your playlist or add your favourite song";
-      favList.appendChild(msg);
-      return;
-    }
-
-    favorites.forEach((songIndex) => {
-      const { title, img } = songData[songIndex];
-      const li = document.createElement("li");
-      li.classList.add("fav-item");
-      li.innerHTML = `
-        <img src="${img}" alt="song" width="40" height="40" onerror="this.src='music.svg'">
-        <div class="info"><div>${title}</div></div>
-        <img class="play-icon" src="play.svg" style="cursor:pointer;width:24px;height:24px;margin-left:auto;">
-        <div class="remove-btn" style="cursor:pointer;color:red;margin-left:8px;">✖</div>
-      `;
-
-      // Play from favorites list
-      li.querySelector(".play-icon").addEventListener("click", (e) => {
-        e.stopPropagation();
-        playSong(songIndex, null, li, "favorites");
-      });
-
-      // Remove from favorites
-      li.querySelector(".remove-btn").addEventListener("click", (e) => {
-        e.stopPropagation();
-        favorites.delete(songIndex);
-        updateFavoritesUI();
-        const favBtn = document.querySelector(
-          `.card[data-index="${songIndex}"] .fav-btn`
-        );
-        if (favBtn) favBtn.textContent = "🤍";
-      });
-
-      favList.appendChild(li);
-    });
-  }
-
+  // Build cards from JSON
   for (let i = 0; i < songs.length; i++) {
-    const songUrl = songs[i];
-    const filename = decodeURIComponent(songUrl.split("/").pop());
-    const nameOnly = filename.replace(/\.mp3$/i, "").trim();
-    const sanitizedName = sanitizeFileName(nameOnly);
+    const songUrl = songs[i].file;
+    const nameOnly = songs[i].title || decodeURIComponent(songUrl.split("/").pop()).replace(/\.mp3$/i, "").trim();
+    const sanitizedName = nameOnly.toLowerCase().replace(/[^a-z0-9]/g, "");
 
-    const matchedImage = images.find((imgUrl) => {
-      const imgName = decodeURIComponent(imgUrl.split("/").pop())
-        .replace(/\.[^.]+$/, "")
-        .trim();
-      return sanitizeFileName(imgName) === sanitizedName;
-    });
+    const matchedImage = images.find(img =>
+      img.title && img.title.toLowerCase().replace(/[^a-z0-9]/g, "") === sanitizedName
+    );
 
-    let imgSrc = matchedImage
-      ? `images/${decodeURIComponent(matchedImage.split("/").pop())}`
-      : "music.svg";
+    let imgSrc = matchedImage ? matchedImage.file : "music.svg";
 
     songData.push({ title: nameOnly, url: songUrl, img: imgSrc });
 
-    // Card UI
     const card = document.createElement("div");
     card.classList.add("card");
     card.setAttribute("data-index", i);
@@ -132,9 +57,6 @@ async function main() {
       <span class="fav-btn" style="cursor:pointer;font-size:20px;position:absolute;bottom:10px;right:10px;">🤍</span>
     `;
 
-    // Make card position relative for heart position
-    card.style.position = "relative";
-
     // Favorite button
     const favBtn = card.querySelector(".fav-btn");
     favBtn.addEventListener("click", (e) => {
@@ -149,14 +71,14 @@ async function main() {
       updateFavoritesUI();
     });
 
-    // Play button click only
-    card.querySelector(".playbtn").addEventListener("click", (e) => {
-      e.stopPropagation();
+    // Play click
+    card.querySelector(".playbtn").addEventListener("click", () => {
       playSong(i, card, null, "all");
     });
 
     cardContainer.appendChild(card);
   }
+
 
   function playSong(index, card = null, li = null, mode = "all") {
     playMode = mode;
