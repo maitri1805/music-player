@@ -1,23 +1,26 @@
 async function getFilesFromDir(url) {
   let res = await fetch(url);
-  if (!res.ok) {
-    throw new Error(`Failed to fetch files from ${url}: ${res.statusText}`);
-  }
   let text = await res.text();
   let div = document.createElement("div");
   div.innerHTML = text;
   let as = div.getElementsByTagName("a");
   return Array.from(as).map((a) => a.href);
 }
+
+function sanitizeFileName(name) {
+  return name.toLowerCase().replace(/[^a-z0-9]/g, "");
+}
+
 async function getsongs() {
-  // Use relative paths for GitHub Pages
-  let songLinks = await getFilesFromDir("./songs/");
-  let imageLinks = await getFilesFromDir("./images/");
+  let songLinks = await getFilesFromDir("http://github.com/maitri1805/music-player/songs/");
+  let imageLinks = await getFilesFromDir("http://127.0.0.1:5500/images/");
+
   let songs = songLinks.filter((href) => href.toLowerCase().endsWith(".mp3"));
   let images = imageLinks.filter(
     (href) =>
       href.toLowerCase().endsWith(".jpg") || href.toLowerCase().endsWith(".png")
   );
+
   return { songs, images };
 }
 
