@@ -1,7 +1,7 @@
 [
     {
         "title": "Dil Ko Karaar Aaya",
-        "file": "songs/Dil Ko Karaar Aaya.mp3"
+        "url": "songs/Dil Ko Karaar Aaya.mp3"
     },
     {
         "title": "Kesariya",
@@ -9,14 +9,14 @@
     },
     {
         "title": "Shayad",
-        "file": "songs/Shayad.mp3"
+        "url": "songs/Shayad.mp3"
     },
     {
         "title": "Tum Hi Ho",
-        "file": "songs/Tum Hi Ho.mp3"
+        "url": "songs/Tum Hi Ho.mp3"
     },
     {
         "title": "Raataan Lambiyan",
-        "file": "songs/Raataan Lambiyan.mp3"
+        "url": "songs/Raataan Lambiyan.mp3"
     }
 ]
