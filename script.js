@@ -12,8 +12,9 @@ function sanitizeFileName(name) {
 }
 
 async function getsongs() {
-  let songLinks = await getFilesFromDir("http://127.0.0.1:5500/songs/");
-  let imageLinks = await getFilesFromDir("http://127.0.0.1:5500/images/");
+  // Use relative paths for GitHub Pages
+  let songLinks = await getFilesFromDir("/songs/");
+  let imageLinks = await getFilesFromDir("/images/");
 
   let songs = songLinks.filter((href) => href.toLowerCase().endsWith(".mp3"));
   let images = imageLinks.filter(
@@ -23,6 +24,7 @@ async function getsongs() {
 
   return { songs, images };
 }
+
 
 async function main() {
   const { songs, images } = await getsongs();
