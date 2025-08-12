@@ -1,0 +1,11 @@
+<!-- music-white-advanced.svg -->
+<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40"
+     viewBox="0 0 40 40" fill="none" aria-hidden="true">
+  <!-- Advanced shape background -->
+  <path d="M10 2h20c4.418 0 8 3.582 8 8v20c0 4.418-3.582 8-8 8H10c-4.418 0-8-3.582-8-8V10c0-4.418 3.582-8 8-8z"
+        fill="none" stroke="white" stroke-width="2" rx="8" ry="8"/>
+  <!-- Music note -->
+  <path d="M16 28V12l12-3v12" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="13" cy="28" r="3" fill="white"/>
+  <circle cx="26" cy="24" r="3" fill="white"/>
+</svg>

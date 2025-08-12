@@ -1,0 +1,23 @@
+<svg viewBox="30 50 160 90"
+     xmlns="http://www.w3.org/2000/svg"
+     preserveAspectRatio="xMinYMid meet"
+     style="width: 100%; height: auto;">
+  <defs>
+    <linearGradient id="playGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#4f46e5" />
+      <stop offset="100%" stop-color="#9333ea" />
+    </linearGradient>
+  </defs>
+
+  <polygon points="40,50 40,100 80,75" fill="url(#playGradient)" />
+  <rect x="100" y="60" width="10" height="30" rx="2" fill="#10b981" />
+  <rect x="120" y="50" width="10" height="50" rx="2" fill="#3b82f6" />
+  <rect x="140" y="55" width="10" height="40" rx="2" fill="#f59e0b" />
+  <rect x="160" y="65" width="10" height="25" rx="2" fill="#ef4444" />
+
+  <text x="120" y="130" text-anchor="middle"
+        font-family="Segoe UI, Arial, sans-serif"
+        font-size="20" fill="#ffffff">
+    PlayBeats
+  </text>
+</svg>
