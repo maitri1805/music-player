@@ -12,7 +12,7 @@ function sanitizeFileName(name) {
 }
 
 async function getsongs() {
-  let songLinks = await getFilesFromDir("http://127.0.0.1:5500/songs/");
+  let songLinks = await getFilesFromDir("https://github.com/maitri1805/music-player/tree/main/songs/");
   let imageLinks = await getFilesFromDir("http://127.0.0.1:5500/images/");
 
   let songs = songLinks.filter((href) => href.toLowerCase().endsWith(".mp3"));
